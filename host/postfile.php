@@ -1,11 +1,31 @@
 <?php
+//------子节点读取
+/*
+$wdnmd = array("cnmd","sb","sdkajfwejkf"); 
+$file_path = "client";
+if(file_exists($file_path)){
+$str = file_get_contents($file_path);//将整个文件内容读入到一个字符串中
+$str = str_replace("\n","#wdnmd#",$str);
+//echo($str);
+$hello = explode('#wdnmd#',$str); 
+}
+/*
+for($index=0;$index<count($hello);$index++) 
+{ 
+echo $hello[$index];echo "</br>"; 
+} 
+
+}
+*/
+//-----------------------------------
+$url='http://47.113.81.99/client/';
     			 session_start();
 $i  = 0;                 //分割的块编号
 $fp  = fopen("./upload/".$_SESSION['fname'],"rb");      //要分割的文件
 $file = fopen($_SESSION['fname'].".info","a");    //记录分割的信息的文本文件，实际生产环境存在redis更合适
 $filename="";
 while(!feof($fp)){
-    $handle = fopen("./".$_SESSION['fname'].$i,"wb");
+    $handle = fopen("./upload/".$_SESSION['fname'].$i,"wb");
     fwrite($handle,fread($fp,52428));//切割的块大小 5m
     fwrite($file,"./upload/".$_SESSION['fname'].$i."\r\n");
     
@@ -18,13 +38,14 @@ fclose ($file);
 
 for($emmm=0;$emmm<=$i;$emmm++){
     $filename="./".$_SESSION['fname'].$emmm;
+    $fn=$_SESSION['fname'].$emmm;
     $post_data = array(
-  'file' =>$filename
+  'file' =>$fn
 );
-    send_post("http://debug.sidcloud.cn/filesrc/head.php",$post_data);
-$u='http://debug.sidcloud.cn/filesrc/index.php';
+    send_post($url."head.php",$post_data);
+$u=$url.'index.php';
     echo("./".$filename."<br>");
-    sendStreamFile($u,"./".$filename);
+    sendStreamFile($u,"./upload/".$filename);
 }
 
 

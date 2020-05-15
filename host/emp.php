@@ -41,5 +41,5 @@
     			 session_start();
     $_SESSION['fname']=$_FILES['file'][name];
     	header("location:postfile.php");
-    	echo("./".$_SESSION['fname']);
+    //	echo($_SESSION['fname']);
 ?>
